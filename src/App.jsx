@@ -597,15 +597,71 @@ function App() {
   );
 
   // ============== KPI VIEW ==============
+  // Calculate actuals from scoreboard and pipelines
+  const actualRevenue = (scoreboard.sh.admissions || 0) + (scoreboard.sh.rentals || 0) + (scoreboard.sh.concessions || 0);
+  const actualSponsorDollars = scoreboard.sales.sponsorDollars || 0;
+  const actualGrantDollars = scoreboard.grants.grantDollars || 0;
+  const actualGRFamilies = scoreboard.gr.families || 0;
+  const pipelineSponsorsClosed = pipelines.sponsors.closed || 0;
+  const pipelineGrantsWon = pipelines.grants.won || 0;
+  const totalActual = actualRevenue + actualSponsorDollars + actualGrantDollars;
+  const totalTarget = kpiTargets.reduce((sum, k) => sum + (k.shRev || 0) + (k.grFunding || 0) + (k.otherRev || 0), 0);
+  const progressPercent = totalTarget > 0 ? ((totalActual / totalTarget) * 100).toFixed(1) : 0;
+
   const KpiView = () => (
     <div className="space-y-4">
       <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl p-4">
         <h2 className="text-2xl font-bold">🎯 $6,000,000 Goal by June 30, 2026</h2>
-        <p className="opacity-90">Edit targets below to track progress</p>
+        <div className="flex justify-between items-center mt-2">
+          <p className="opacity-90">Actual vs Target tracking</p>
+          <div className="text-right">
+            <p className="text-3xl font-bold">${totalActual.toLocaleString()}</p>
+            <p className="text-sm opacity-80">of ${totalTarget.toLocaleString()} ({progressPercent}%)</p>
+          </div>
+        </div>
+        <div className="mt-2 bg-white/20 rounded-full h-4 overflow-hidden">
+          <div className="bg-white h-full transition-all" style={{width: `${Math.min(progressPercent, 100)}%`}}></div>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-4">
-        <h3 className="font-bold text-gray-800 mb-3">📊 Jan-Jun 2026 Revenue Targets</h3>
+        <h3 className="font-bold text-gray-800 mb-3">📊 LIVE ACTUALS (from Scoreboard + Pipelines)</h3>
+        <div className="grid md:grid-cols-4 gap-3">
+          <div className="bg-purple-100 p-3 rounded-lg text-center border-2 border-purple-300">
+            <p className="text-2xl font-bold text-purple-700">${actualRevenue.toLocaleString()}</p>
+            <p className="text-xs text-gray-600">SH Revenue (Adm+Rent+Conc)</p>
+          </div>
+          <div className="bg-green-100 p-3 rounded-lg text-center border-2 border-green-300">
+            <p className="text-2xl font-bold text-green-700">${actualSponsorDollars.toLocaleString()}</p>
+            <p className="text-xs text-gray-600">Sponsor $ (from Scoreboard)</p>
+          </div>
+          <div className="bg-yellow-100 p-3 rounded-lg text-center border-2 border-yellow-300">
+            <p className="text-2xl font-bold text-yellow-700">${actualGrantDollars.toLocaleString()}</p>
+            <p className="text-xs text-gray-600">Grant $ Awarded</p>
+          </div>
+          <div className="bg-blue-100 p-3 rounded-lg text-center border-2 border-blue-300">
+            <p className="text-2xl font-bold text-blue-700">{actualGRFamilies}</p>
+            <p className="text-xs text-gray-600">GR Families</p>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-3 gap-3 mt-3">
+          <div className="bg-gray-100 p-2 rounded text-center">
+            <p className="font-bold text-lg">{pipelineSponsorsClosed}</p>
+            <p className="text-xs">Pipeline: Sponsors Closed</p>
+          </div>
+          <div className="bg-gray-100 p-2 rounded text-center">
+            <p className="font-bold text-lg">{pipelineGrantsWon}</p>
+            <p className="text-xs">Pipeline: Grants Won</p>
+          </div>
+          <div className="bg-gray-100 p-2 rounded text-center">
+            <p className="font-bold text-lg">{pipelines.grFamilies.active || 0}</p>
+            <p className="text-xs">Pipeline: GR Active</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-lg p-4">
+        <h3 className="font-bold text-gray-800 mb-3">📊 Jan-Jun 2026 Revenue TARGETS (type to edit)</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
@@ -622,10 +678,10 @@ function App() {
               {kpiTargets.map((kpi, i) => (
                 <tr key={i} className="border-b">
                   <td className="p-2 font-bold">{kpi.month}</td>
-                  <td className="p-1"><input type="number" className="w-full border rounded p-1 text-center" value={kpi.shRev} onChange={e => { const newKpi = [...kpiTargets]; newKpi[i].shRev = parseInt(e.target.value) || 0; saveKpiTargets(newKpi); }} /></td>
-                  <td className="p-1"><input type="number" className="w-full border rounded p-1 text-center" value={kpi.grFunding} onChange={e => { const newKpi = [...kpiTargets]; newKpi[i].grFunding = parseInt(e.target.value) || 0; saveKpiTargets(newKpi); }} /></td>
-                  <td className="p-1"><input type="number" className="w-full border rounded p-1 text-center" value={kpi.otherRev} onChange={e => { const newKpi = [...kpiTargets]; newKpi[i].otherRev = parseInt(e.target.value) || 0; saveKpiTargets(newKpi); }} /></td>
-                  <td className="p-2 font-bold text-green-600">${((kpi.shRev || 0) + (kpi.grFunding || 0) + (kpi.otherRev || 0)).toLocaleString()}</td>
+                  <td className="p-1"><input type="text" inputMode="numeric" className="w-full border rounded p-2 text-center text-sm font-medium" value={kpi.shRev || ''} onChange={e => { const val = e.target.value.replace(/[^0-9]/g, ''); const newKpi = [...kpiTargets]; newKpi[i].shRev = parseInt(val) || 0; saveKpiTargets(newKpi); }} placeholder="0" /></td>
+                  <td className="p-1"><input type="text" inputMode="numeric" className="w-full border rounded p-2 text-center text-sm font-medium" value={kpi.grFunding || ''} onChange={e => { const val = e.target.value.replace(/[^0-9]/g, ''); const newKpi = [...kpiTargets]; newKpi[i].grFunding = parseInt(val) || 0; saveKpiTargets(newKpi); }} placeholder="0" /></td>
+                  <td className="p-1"><input type="text" inputMode="numeric" className="w-full border rounded p-2 text-center text-sm font-medium" value={kpi.otherRev || ''} onChange={e => { const val = e.target.value.replace(/[^0-9]/g, ''); const newKpi = [...kpiTargets]; newKpi[i].otherRev = parseInt(val) || 0; saveKpiTargets(newKpi); }} placeholder="0" /></td>
+                  <td className="p-2 font-bold text-green-600 text-sm">${((kpi.shRev || 0) + (kpi.grFunding || 0) + (kpi.otherRev || 0)).toLocaleString()}</td>
                   <td className="p-2">{(kpi.margin * 100).toFixed(0)}%</td>
                 </tr>
               ))}
@@ -634,7 +690,7 @@ function App() {
                 <td className="p-2">${kpiTargets.reduce((sum, k) => sum + (k.shRev || 0), 0).toLocaleString()}</td>
                 <td className="p-2">${kpiTargets.reduce((sum, k) => sum + (k.grFunding || 0), 0).toLocaleString()}</td>
                 <td className="p-2">${kpiTargets.reduce((sum, k) => sum + (k.otherRev || 0), 0).toLocaleString()}</td>
-                <td className="p-2 text-green-700">${kpiTargets.reduce((sum, k) => sum + (k.shRev || 0) + (k.grFunding || 0) + (k.otherRev || 0), 0).toLocaleString()}</td>
+                <td className="p-2 text-green-700">${totalTarget.toLocaleString()}</td>
                 <td className="p-2">—</td>
               </tr>
             </tbody>
@@ -644,31 +700,47 @@ function App() {
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-4">
-        <h3 className="font-bold text-gray-800 mb-3">📈 Key Targets</h3>
+        <h3 className="font-bold text-gray-800 mb-3">📈 Key Targets vs Actuals</h3>
         <div className="grid md:grid-cols-3 gap-3">
-          <div className="bg-purple-50 p-3 rounded-lg text-center">
-            <p className="text-2xl font-bold text-purple-700">${TARGETS.goals.skateHausMonthly.toLocaleString()}</p>
-            <p className="text-sm text-gray-600">SH Monthly Revenue</p>
+          <div className="bg-purple-50 p-3 rounded-lg">
+            <p className="text-xs text-gray-500">SH Monthly Target</p>
+            <p className="text-xl font-bold text-purple-700">${TARGETS.goals.skateHausMonthly.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">This Week Actual</p>
+            <p className="text-lg font-bold text-purple-600">${actualRevenue.toLocaleString()}</p>
+            <div className="mt-1 bg-gray-200 rounded-full h-2"><div className="bg-purple-500 h-full rounded-full" style={{width: `${Math.min((actualRevenue / TARGETS.goals.skateHausMonthly) * 100, 100)}%`}}></div></div>
           </div>
-          <div className="bg-blue-50 p-3 rounded-lg text-center">
-            <p className="text-2xl font-bold text-blue-700">${TARGETS.goals.giantRocket6M.toLocaleString()}</p>
-            <p className="text-sm text-gray-600">GR Goal by June</p>
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <p className="text-xs text-gray-500">GR Goal by June</p>
+            <p className="text-xl font-bold text-blue-700">${TARGETS.goals.giantRocket6M.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">Total Actual</p>
+            <p className="text-lg font-bold text-blue-600">${totalActual.toLocaleString()}</p>
+            <div className="mt-1 bg-gray-200 rounded-full h-2"><div className="bg-blue-500 h-full rounded-full" style={{width: `${Math.min((totalActual / TARGETS.goals.giantRocket6M) * 100, 100)}%`}}></div></div>
           </div>
-          <div className="bg-green-50 p-3 rounded-lg text-center">
-            <p className="text-2xl font-bold text-green-700">${TARGETS.goals.grantGoalMay.toLocaleString()}</p>
-            <p className="text-sm text-gray-600">Grants by May</p>
+          <div className="bg-green-50 p-3 rounded-lg">
+            <p className="text-xs text-gray-500">Grants by May</p>
+            <p className="text-xl font-bold text-green-700">${TARGETS.goals.grantGoalMay.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">Grant $ Awarded</p>
+            <p className="text-lg font-bold text-green-600">${actualGrantDollars.toLocaleString()}</p>
+            <div className="mt-1 bg-gray-200 rounded-full h-2"><div className="bg-green-500 h-full rounded-full" style={{width: `${Math.min((actualGrantDollars / TARGETS.goals.grantGoalMay) * 100, 100)}%`}}></div></div>
           </div>
-          <div className="bg-yellow-50 p-3 rounded-lg text-center">
-            <p className="text-2xl font-bold text-yellow-700">{TARGETS.families.annual.toLocaleString()}</p>
-            <p className="text-sm text-gray-600">Families Annually</p>
+          <div className="bg-yellow-50 p-3 rounded-lg">
+            <p className="text-xs text-gray-500">Families Target</p>
+            <p className="text-xl font-bold text-yellow-700">{TARGETS.families.annual.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">GR Families Actual</p>
+            <p className="text-lg font-bold text-yellow-600">{actualGRFamilies}</p>
+            <div className="mt-1 bg-gray-200 rounded-full h-2"><div className="bg-yellow-500 h-full rounded-full" style={{width: `${Math.min((actualGRFamilies / TARGETS.families.annual) * 100, 100)}%`}}></div></div>
           </div>
-          <div className="bg-orange-50 p-3 rounded-lg text-center">
-            <p className="text-2xl font-bold text-orange-700">{TARGETS.families.kidsServed.toLocaleString()}</p>
-            <p className="text-sm text-gray-600">Kids Served</p>
+          <div className="bg-orange-50 p-3 rounded-lg">
+            <p className="text-xs text-gray-500">Kids Served Target</p>
+            <p className="text-xl font-bold text-orange-700">{TARGETS.families.kidsServed.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">Pipeline Active</p>
+            <p className="text-lg font-bold text-orange-600">{pipelines.grFamilies.active || 0}</p>
           </div>
-          <div className="bg-red-50 p-3 rounded-lg text-center">
-            <p className="text-2xl font-bold text-red-700">{TARGETS.families.quarterlyBus}</p>
-            <p className="text-sm text-gray-600">Quarterly Bus Families</p>
+          <div className="bg-red-50 p-3 rounded-lg">
+            <p className="text-xs text-gray-500">Quarterly Bus Target</p>
+            <p className="text-xl font-bold text-red-700">{TARGETS.families.quarterlyBus}</p>
+            <p className="text-xs text-gray-500 mt-1">Enrolled in Pipeline</p>
+            <p className="text-lg font-bold text-red-600">{pipelines.grFamilies.enrolled || 0}</p>
           </div>
         </div>
       </div>
