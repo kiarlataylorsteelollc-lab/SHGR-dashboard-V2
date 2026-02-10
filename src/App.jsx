@@ -58,11 +58,54 @@ const WEEKLY_REVIEW = [
 ];
 
 const CALENDAR_EVENTS = [
-  { date: '2026-02-01', org: 'GR', title: 'Transportation partners locked', details: 'Must be done first week', owner: 'Ops' },
+  // January
+  { date: '2026-01-06', org: 'SH', title: 'Launch 4 Big Buttons', details: 'Website payment buttons go live', owner: 'Marketing' },
+  { date: '2026-01-10', org: 'GR', title: 'Start Weekly Sensory Skate', details: 'Weekly recurring program begins', owner: 'Kiarla' },
+  { date: '2026-01-17', org: 'GR', title: 'Start Biweekly Field Trips', details: 'School field trip program begins', owner: 'Kiarla' },
+  // February
+  { date: '2026-02-01', org: 'GR', title: 'Transportation Partners Locked', details: 'Must be done first week', owner: 'Ops' },
+  { date: '2026-02-07', org: 'GR', title: 'Open House #1', details: 'Giant Rocket community intro', owner: 'Kiarla' },
   { date: '2026-02-15', org: 'SH/GR', title: 'B2B Sponsorship Event', details: 'Sponsor outreach event', owner: 'Sales' },
   { date: '2026-02-17', org: 'GR', title: 'Soft Launch/Media Week Start', details: 'Feb 17-21 media push', owner: 'VOTP' },
+  // March
   { date: '2026-03-14', org: 'GR', title: 'Open House #2 (314 Day)', details: 'Schools + therapists focus', owner: 'Kiarla' },
-  { date: '2026-04-01', org: 'GR', title: 'Giant Rocket Kickoff', details: 'Autism Awareness Month launch', owner: 'Admin' },
+  { date: '2026-03-16', org: 'SH', title: 'Spring Break Promo Start', details: 'Spring break programming', owner: 'Marketing' },
+  // April
+  { date: '2026-04-01', org: 'GR', title: '🚀 Giant Rocket Kickoff', details: 'Autism Awareness Month launch', owner: 'Admin' },
+  { date: '2026-04-02', org: 'GR', title: 'Awareness Day Press', details: 'World Autism Awareness Day media', owner: 'VOTP' },
+  { date: '2026-04-18', org: 'GR', title: 'Major Fundraiser', details: 'Giant Rocket fundraising event', owner: 'Kiarla' },
+  // May
+  { date: '2026-05-01', org: 'GR', title: 'Camp/Afterschool Enrollment Push', details: 'Summer enrollment drive', owner: 'Sales' },
+  { date: '2026-05-25', org: 'SH', title: 'Memorial Day Events', details: 'Holiday weekend programming', owner: 'Kiarla' },
+  { date: '2026-05-31', org: 'GR', title: '🎯 $1M Grant Target', details: 'Grant goal deadline', owner: 'Grants' },
+  // June
+  { date: '2026-06-15', org: 'SH/GR', title: 'Sponsor Summit + Proof Showcase', details: 'Mid-year sponsor event', owner: 'Sales' },
+  { date: '2026-06-20', org: 'GR', title: 'Quarterly Bus #1', details: '300 families transportation', owner: 'Kiarla' },
+  { date: '2026-06-30', org: 'GR', title: '🎯 $6M Target Check', details: 'June 30 closeout + review', owner: 'Chase' },
+  // July
+  { date: '2026-07-04', org: 'SH', title: 'July 4th Theme Night', details: 'Independence Day celebration', owner: 'Kiarla' },
+  { date: '2026-07-11', org: 'SH', title: 'Summer Theme Nights', details: 'Weekly summer events begin', owner: 'Kiarla' },
+  { date: '2026-07-25', org: 'SH/GR', title: 'Community Collabs', details: 'Partner organization events', owner: 'Sales' },
+  // August
+  { date: '2026-08-01', org: 'SH/GR', title: 'School Outreach Wave', details: 'Back-to-school partnerships', owner: 'Sales' },
+  { date: '2026-08-10', org: 'GR', title: 'Afterschool Signups', details: 'Fall program registration', owner: 'Admin' },
+  { date: '2026-08-15', org: 'GR', title: 'Quarterly Bus #2', details: '300 families transportation', owner: 'Kiarla' },
+  // September
+  { date: '2026-09-01', org: 'GR', title: 'Afterschool Launch', details: 'Fall afterschool program starts', owner: 'Kiarla' },
+  { date: '2026-09-15', org: 'GR', title: 'Quarterly Impact Showcase', details: 'Program results presentation', owner: 'Admin' },
+  // October
+  { date: '2026-10-17', org: 'SH', title: 'Halloween Skate', details: 'Costume night event', owner: 'Kiarla' },
+  { date: '2026-10-24', org: 'SH', title: 'Costume Nights', details: 'Halloween themed sessions', owner: 'Kiarla' },
+  { date: '2026-10-31', org: 'SH', title: 'Halloween Party', details: 'Main Halloween event', owner: 'Kiarla' },
+  // November
+  { date: '2026-11-15', org: 'GR', title: 'Quarterly Bus #3', details: '300 families transportation', owner: 'Kiarla' },
+  { date: '2026-11-21', org: 'SH/GR', title: 'Family Events', details: 'Thanksgiving week activities', owner: 'Kiarla' },
+  { date: '2026-12-01', org: 'SH/GR', title: 'Giving Tuesday Campaign', details: 'Donor drive kickoff', owner: 'Sales' },
+  // December
+  { date: '2026-12-05', org: 'SH', title: 'Holiday Events Begin', details: 'Seasonal programming starts', owner: 'Kiarla' },
+  { date: '2026-12-15', org: 'SH/GR', title: 'Sponsor Renewals Due', details: 'Next year commitments', owner: 'Sales' },
+  { date: '2026-12-20', org: 'GR', title: 'Quarterly Bus #4', details: '300 families transportation', owner: 'Kiarla' },
+  { date: '2026-12-31', org: 'SH/GR', title: 'Year-End Recap', details: 'Annual closeout + reports', owner: 'Admin' },
 ];
 
 const CALENDAR_2026 = {
@@ -693,17 +736,26 @@ function App() {
         </div>
       )}
       <div className="bg-white rounded-xl shadow-lg p-4">
-        <h3 className="font-bold text-gray-800 mb-3">📅 Upcoming Events</h3>
-        <div className="space-y-2">
-          {CALENDAR_EVENTS.map((ev, i) => (
-            <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
-              <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded">{ev.date}</span>
-              <span className="bg-blue-100 text-xs px-2 py-1 rounded">{ev.org}</span>
-              <span className="font-medium">{ev.title}</span>
-              <span className="text-gray-500 text-sm flex-1">{ev.details}</span>
+        <h3 className="font-bold text-gray-800 mb-3">📅 {CALENDAR_2026[selectedMonth].month} Events</h3>
+        {(() => {
+          const monthNum = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(selectedMonth) + 1;
+          const monthStr = monthNum.toString().padStart(2, '0');
+          const filtered = CALENDAR_EVENTS.filter(ev => ev.date.includes(`-${monthStr}-`));
+          return filtered.length === 0 ? (
+            <p className="text-gray-500 text-center py-4">No events scheduled for this month.</p>
+          ) : (
+            <div className="space-y-2">
+              {filtered.map((ev, i) => (
+                <div key={i} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
+                  <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded">{ev.date}</span>
+                  <span className="bg-blue-100 text-xs px-2 py-1 rounded">{ev.org}</span>
+                  <span className="font-medium">{ev.title}</span>
+                  <span className="text-gray-500 text-sm flex-1">{ev.details}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })()}
       </div>
     </div>
   );
