@@ -505,7 +505,7 @@ function App() {
 
   const userTasks = ALL_ROLE_TASKS[user.role] || ALL_ROLE_TASKS.assistant;
   const isCEO = user.role === 'ceo' || user.role === 'owner';
-  const canApproveContent = user.role === 'ceo' || user.role === 'owner' || user.role === 'votp';
+  const canApproveContent = user.role === 'ceo' || user.role === 'owner' || user.role === 'votp' || user.role === 'ops';
 
   // Calculations
   const actualRevenue = (scoreboard.sh.admissions || 0) + (scoreboard.sh.rentals || 0) + (scoreboard.sh.concessions || 0);
