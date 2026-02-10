@@ -58,11 +58,11 @@ const WEEKLY_REVIEW = [
 ];
 
 const CALENDAR_EVENTS = [
-  { date: '2026-04-01', org: 'GR', title: 'Giant Rocket Kickoff', details: 'Autism Awareness Month launch', owner: 'Admin' },
   { date: '2026-02-01', org: 'GR', title: 'Transportation partners locked', details: 'Must be done first week', owner: 'Ops' },
   { date: '2026-02-15', org: 'SH/GR', title: 'B2B Sponsorship Event', details: 'Sponsor outreach event', owner: 'Sales' },
   { date: '2026-02-17', org: 'GR', title: 'Soft Launch/Media Week Start', details: 'Feb 17-21 media push', owner: 'VOTP' },
   { date: '2026-03-14', org: 'GR', title: 'Open House #2 (314 Day)', details: 'Schools + therapists focus', owner: 'Kiarla' },
+  { date: '2026-04-01', org: 'GR', title: 'Giant Rocket Kickoff', details: 'Autism Awareness Month launch', owner: 'Admin' },
 ];
 
 const CALENDAR_2026 = {
